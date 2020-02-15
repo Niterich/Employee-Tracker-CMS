@@ -1,0 +1,24 @@
+{
+  "name": "employee-tracker-cms",
+  "version": "1.0.0",
+  "description": "employee tracker CMS",
+  "main": "connection.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Niterich/Employee-Tracker-CMS.git"
+  },
+  "author": "Ryan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Niterich/Employee-Tracker-CMS/issues"
+  },
+  "homepage": "https://github.com/Niterich/Employee-Tracker-CMS#readme",
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.2"
+  }
+}
