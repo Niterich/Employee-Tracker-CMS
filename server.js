@@ -55,11 +55,14 @@ function start() {
 start();
 
 function viewEmployees(){
-    connection.query("select * from employee_table;", function (err, res) {
+    // need a join here to view the employees title, salary, department and manager
+    // SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role_table on employee.role_id = role.id LEFT JOIN department_table on role.department_id = department.id LEFT JOIN employee_table manager on manager.id = employee.manager_id;
+    // FROM employee_table
+    // 
+    const queryString = `SELECT employee_table.id, employee_table.first_name, employee_table.last_name, role_table.title, department_table.dept_name AS department, role_table.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee_table LEFT JOIN role_table on employee_table.role_id = role_table.id LEFT JOIN department_table on role_table.department_id = department_table.id LEFT JOIN employee_table manager on manager.id = employee_table.manager_id ORDER BY employee_table.id;`;
+    connection.query(queryString, function (err, res) {
         if (err) throw err;
-        for (let i = 0; i < res.length; i++) {
-            console.log(res[i].first_name + " " + res[i].last_name);
-        }
+        console.table(res);
         start();
         }    
     );
@@ -67,10 +70,10 @@ function viewEmployees(){
 
 function viewEmpByDept(){
     //need a join here to access the employees despartment via the role
-    connection.query("select * from employee_table order by role_id", function (err, res) {
+    connection.query("SELECT * FROM employee_table ORDER BY role_id", function (err, res) {
         if (err) throw err;
         for (let i = 0; i < res.length; i++) {
-            console.log(res[i].first_name + " " + res[i].last_name;
+            console.log(res[i].first_name + " " + res[i].last_name)
         }
         start();
         }    
@@ -103,8 +106,9 @@ function addRole(){
 function removeRole(){
 
 }
+
 //to-do
-    //understanding joins
+    // understanding joins
     // build the departments
     // inside of the departments, create 3-4 different employee roles (titles with salaries)
     // are roles referencing the department ids correctly? they are hard coded as numbers
@@ -113,3 +117,4 @@ function removeRole(){
         // create a manager in each department
         // leave room to add employees in each department
     // assign conditional logic to interact with the database. CRUD functionality
+    // getting everything to format like the gif
