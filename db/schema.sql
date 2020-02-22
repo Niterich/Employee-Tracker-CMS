@@ -4,35 +4,35 @@ CREATE DATABASE employee_db;
 
 USE employee_db;
 
--- DROP Table department_table;
+-- DROP TABLE department_table;
 
-Create Table department_table (
-    id int not null AUTO_INCREMENT,
-    dept_name varchar(30),
-    primary key (id)
+CREATE TABLE department_table (
+    id INT NOT null AUTO_INCREMENT,
+    dept_name VARCHAR(30),
+    PRIMARY KEY (id)
 );
 
 -- DROP TABLE role_table;
 CREATE TABLE role_table (
-    id INT not null AUTO_INCREMENT,
-    title varchar(30),
+    id INT NOT null AUTO_INCREMENT,
+    title VARCHAR(30),
     salary DECIMAL(10,4),
-    department_id int,
+    department_id INT,
     PRIMARY KEY (id),
-    FOREIGN KEY (department_id) references department_table(id)
+    FOREIGN KEY (department_id) REFERENCES department_table(id)
 );
 
 -- DROP TABLE employee_table;
 
 CREATE TABLE employee_table (
   id INT NOT NULL AUTO_INCREMENT,
-  first_name VARCHAR(30) not NULL,
-  last_name varchar(30) not NULL,
-  role_id int not NULL,
-  manager_id int,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
+  role_id INT NOT NULL,
+  manager_id INT,
   PRIMARY KEY (id),
-  FOREIGN KEY (role_id) references role_table(id),
-  FOREIGN KEY (manager_id) references employee_table(id)
+  FOREIGN KEY (role_id) REFERENCES role_table(id),
+  FOREIGN KEY (manager_id) REFERENCES employee_table(id)
 );
 
-select * from employee_table;
+SELECT * FROM employee_table;
