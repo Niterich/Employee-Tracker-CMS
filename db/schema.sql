@@ -13,7 +13,6 @@ Create Table department_table (
 );
 
 -- DROP TABLE role_table;
-
 CREATE TABLE role_table (
     id INT not null AUTO_INCREMENT,
     title varchar(30),
