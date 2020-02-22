@@ -157,23 +157,23 @@ function removeEmployee(){
             employeeArray.push(`${res[i].first_name}`);
             console.log(employeeArray);
         }
-    });
-    inquirer.prompt([
-        {
-            type: "list",
-            message: "Who do you want to remove?",
-            name: "remove",
-            //employee array is not defined??
-            list: employeeArray
-        }
-    ]).then(res => {
-        const queryString = `DELETE FROM employee_table WHERE last_name =${res.remove};`
-        connection.query(queryString, function (err, res) {
-            if (err) throw err;
-            console.table("Employee Deleted!");
-            start();
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "Who do you want to remove?",
+                name: "remove",
+                //employee array is not defined??
+                choices: employeeArray
+            }
+        ]).then(res => {
+            const queryString = `DELETE FROM employee_table WHERE first_name = ${res.remove};`
+            connection.query(queryString, function (err, res) {
+                if (err) throw err;
+                console.table("Employee Deleted!");
+                start();
+            })
         })
-    })
+    });
 }
 
 // Updates an employees role
@@ -237,6 +237,6 @@ function removeRole(){
         
 //to fix
     // switch statements
-    // fix remove employee and add employee
+    // fix remove employee (query) and add employee (query)
     // fix update roles and managers
     // fix add and remove roles
