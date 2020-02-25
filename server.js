@@ -245,13 +245,19 @@ function removeRole() {
 // fix remove employee (query) and add employee (query)
 // fix update roles and managers
 // fix add and remove roles
+
+// working on a manager array to determine who to add as an employees manager when adding a new employee
 function managerQuery() {
     const queryString = `SELECT * FROM employee_table;`;
     connection.query(queryString, (err, data) => {
         if (err) throw err;
-        const managers = data.filter(mgr => 
-        mgr.manager_id == null);
+        let managersArray = [];
+        const managers = data.filter(mgr => {
+            if (mgr.manager_id == null){
+                managersArray.push(mgr.first_name + " " + mgr.last_name);
+            };
+            return managersArray;
+        })
         // push manager names into new array to be compatible with inquirer
-        return managers;
     });
 }
