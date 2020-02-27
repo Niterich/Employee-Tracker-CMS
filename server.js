@@ -15,13 +15,12 @@ function start() {
                     "View All Employees",
                     "View All Employees By Department",
                     "View All Employees By Manager",
-                    "Add Employee",
-                    "Remove Employee",
-                    "Update Employee Role",
-                    "Update Employee Manager",
                     "View All Roles",
+                    "View All Departments",
+                    "Add Employee",
                     "Add Role",
-                    "Remove Role",
+                    "Add Department",
+                    "Update Employee Role",
                     "Exit"
                 ]
             }
@@ -35,30 +34,26 @@ function start() {
                 viewEmpByDept();
             } else if (chosenTask === "View All Employees By Manager") {
                 viewEmpByMgr();
-            } else if (chosenTask === "Add Employee") {
-                addEmployee();
-
-                // managerQuery();
-            } else if (chosenTask === "Remove Employee") {
-                removeEmployee();
-            } else if (chosenTask === "Update Employee Role") {
-                updateRole();
-            } else if (chosenTask === "Update Employee Manager") {
-                updateManager();
             } else if (chosenTask === "View All Roles") {
                 viewRoles();
+            } else if (chosenTask === "View All Departments") {
+                // viewAllDept();
+            }else if (chosenTask === "Add Employee") {
+                addEmployee();
             } else if (chosenTask === "Add Role") {
                 addRole();
-            } else if (chosenTask === "Remove Role") {
-                removeRole();
+            } else if (chosenTask === "Add Department") {
+                // addDept();
+            }else if (chosenTask === "Update Employee Role") {
+                updateRole();
             } else {
                 console.log("Goodbye");
                 connection.end();
             }
         });
 }
-
-start();
+// managerQuery();
+// start();
 
 //Displays all employees
 function viewEmployees() {
@@ -88,6 +83,21 @@ function viewEmpByMgr() {
         console.table(res);
         start();
     });
+}
+
+// Lists the role_table
+function viewRoles() {
+    const queryString = "SELECT * FROM role_table;";
+    connection.query(queryString, function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
+}
+
+//Lists all Departments
+function viewAllDept(){
+
 }
 
 // Adds an employee
@@ -152,36 +162,23 @@ function addEmployee() {
         });
 }
 
-// Removes an Employee
-function removeEmployee() {
-    const queryString = `SELECT * FROM employee_table;`;
+// Adds a job to the role_table
+function addRole() {
+    //need inquirer to get title, salary, and which department the role will be in.
+    const queryString =
+    "INSERT INTO role_table (title, salary, department_id) values (?, ?, ?);";
     connection.query(queryString, function(err, res) {
         if (err) throw err;
-        let employeeArray = [];
-        for (let i = 0; i < res.length; i++) {
-            employeeArray.push(`${res[i].first_name}`);
-            console.log(employeeArray);
-        }
-        inquirer
-            .prompt([
-                {
-                    type: "list",
-                    message: "Who do you want to remove?",
-                    name: "remove",
-                    //employee array is not defined??
-                    choices: employeeArray
-                }
-            ])
-            .then(res => {
-                const queryString = `DELETE FROM employee_table WHERE first_name = ${res.remove};`;
-                connection.query(queryString, function(err, res) {
-                    if (err) throw err;
-                    console.table("Employee Deleted!");
-                    start();
-                });
-            });
+        console.log("Role Added!");
+        start();
     });
 }
+
+//adds a new department
+function addDept(){
+
+}
+
 
 // Updates an employees role
 function updateRole() {
@@ -195,69 +192,29 @@ function updateRole() {
     });
 }
 
-// Updates an Employees Manager
-function updateManager() {
-    //inquirer to select employee, change manager
-    const queryString = `UPDATE employee_table
-    SET manager_id=? WHERE first_name=?;`;
-    connection.query(queryString, function(err, res) {
-        if (err) throw err;
-        console.table("Manager Updated!");
-        start();
-    });
-}
+managerQuery();
 
-// Lists the role_table
-function viewRoles() {
-    const queryString = "SELECT * FROM role_table;";
-    connection.query(queryString, function(err, res) {
-        if (err) throw err;
-        console.table(res);
-        start();
-    });
-}
-
-// Adds a job to the role_table
-function addRole() {
-    //need inquirer to get title, salary, and which department the role will be in.
-    const queryString =
-        "INSERT INTO role_table (title, salary, department_id) values (?, ?, ?);";
-    connection.query(queryString, function(err, res) {
-        if (err) throw err;
-        console.log("Role Added!");
-        start();
-    });
-}
-
-// Removes a job from the role table
-function removeRole() {
-    //inquirer to identify the role to be removed
-    const queryString = "DELETE FROM role_table WHERE role.title = ?;";
-    connection.query(queryString, function(err, res) {
-        if (err) throw err;
-        console.log("Role Removed!");
-        start();
-    });
-}
-
-//to fix
-// switch statements
-// fix remove employee (query) and add employee (query)
-// fix update roles and managers
-// fix add and remove roles
-
-// working on a manager array to determine who to add as an employees manager when adding a new employee
 function managerQuery() {
     const queryString = `SELECT * FROM employee_table;`;
     connection.query(queryString, (err, data) => {
         if (err) throw err;
-        let managersArray = [];
-        const managers = data.filter(mgr => {
-            if (mgr.manager_id == null){
-                managersArray.push(mgr.first_name + " " + mgr.last_name);
-            };
-            return managersArray;
-        })
+        // console.log("here is the data", typeof data);
+        let managersArray = data.filter(mgr => {
+            return mgr.manager_id === null;
+        }).map(x => x.first_name + " " + x.last_name);
+        console.log("here is the managers array", managersArray);
+        // const managers = data.filter(mgr => {
+        //     if (mgr.manager_id == null){
+        //         managersArray.push(mgr.first_name + " " + mgr.last_name);
+        //     };
+        //     return managersArray;
+        // })
         // push manager names into new array to be compatible with inquirer
     });
 }
+
+
+//to fix
+// Fix Add employee function
+
+// working on a manager array to determine who to add as an employees manager when adding a new employee
