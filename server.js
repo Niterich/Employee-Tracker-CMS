@@ -252,7 +252,7 @@ function managerQuery() {
                 return mgr.manager_id === null;
             })
             .map(x => x.first_name + " " + x.last_name);
-        console.log("here is the managers array", managersArray);
+        return managersArray;
     });
 }
 
