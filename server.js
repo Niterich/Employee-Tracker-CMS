@@ -3,6 +3,7 @@ const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 const connection = require("./connection");
 
+start();
 // Initalize
 function start() {
     inquirer
@@ -26,7 +27,6 @@ function start() {
             }
         ])
         .then(res => {
-            // Could use a switch statement here for refactor
             const chosenTask = res.task;
             if (chosenTask === "View All Employees") {
                 viewEmployees();
@@ -37,14 +37,14 @@ function start() {
             } else if (chosenTask === "View All Roles") {
                 viewRoles();
             } else if (chosenTask === "View All Departments") {
-                // viewAllDept();
-            }else if (chosenTask === "Add Employee") {
+                viewAllDept();
+            } else if (chosenTask === "Add Employee") {
                 addEmployee();
             } else if (chosenTask === "Add Role") {
                 addRole();
             } else if (chosenTask === "Add Department") {
-                // addDept();
-            }else if (chosenTask === "Update Employee Role") {
+                addDept();
+            } else if (chosenTask === "Update Employee Role") {
                 updateRole();
             } else {
                 console.log("Goodbye");
@@ -52,8 +52,6 @@ function start() {
             }
         });
 }
-// managerQuery();
-// start();
 
 //Displays all employees
 function viewEmployees() {
@@ -96,8 +94,13 @@ function viewRoles() {
 }
 
 //Lists all Departments
-function viewAllDept(){
-
+function viewAllDept() {
+    const queryString = "SELECT * FROM department_table;";
+    connection.query(queryString, function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });
 }
 
 // Adds an employee
@@ -164,9 +167,26 @@ function addEmployee() {
 
 // Adds a job to the role_table
 function addRole() {
-    //need inquirer to get title, salary, and which department the role will be in.
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Enter the name of the role you would like to add.",
+            name: "roleName"
+        },
+        {
+            type: "input",
+            message: "What will the salary be for this new role?",
+            name: "salary"
+        },
+        {
+            type: "list",
+            message: "Which Department will this new role fall under?",
+            name: "dept",
+            choices: departmentQuery()
+        }
+    ]);
     const queryString =
-    "INSERT INTO role_table (title, salary, department_id) values (?, ?, ?);";
+        "INSERT INTO role_table (title, salary, department_id) values (?, ?, ?);";
     connection.query(queryString, function(err, res) {
         if (err) throw err;
         console.log("Role Added!");
@@ -175,14 +195,35 @@ function addRole() {
 }
 
 //adds a new department
-function addDept(){
-
+function addDept() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "Enter the name of the new department.",
+                name: "deptName"
+            }
+        ])
+        .then(data => {
+            const queryString = `INSERT INTO department_table (dept_name) values ("${data.deptName}");`;
+            connection.query(queryString, function(err, res) {
+                if (err) throw err;
+                console.log("Department added!");
+                start();
+            });
+        });
 }
-
 
 // Updates an employees role
 function updateRole() {
-    //inquirer to select employee, change role id number to different role id number
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Which employees role would you like to update?",
+            name: "newRole",
+            choices: employeeQuery()
+        }
+    ]);
     const queryString = `UPDATE employee_table
     SET role_id=? WHERE first_name=?;`;
     connection.query(queryString, function(err, res) {
@@ -192,29 +233,39 @@ function updateRole() {
     });
 }
 
-managerQuery();
+function employeeQuery() {
+    const queryString = `SELECT * FROM employee_table;`;
+    connection.query(queryString, (err, data) => {
+        if (err) throw err;
+        let departmentArray = data.map(emp => emp.first_name);
+        console.log(departmentArray);
+    });
+}
 
 function managerQuery() {
     const queryString = `SELECT * FROM employee_table;`;
     connection.query(queryString, (err, data) => {
         if (err) throw err;
         // console.log("here is the data", typeof data);
-        let managersArray = data.filter(mgr => {
-            return mgr.manager_id === null;
-        }).map(x => x.first_name + " " + x.last_name);
+        let managersArray = data
+            .filter(mgr => {
+                return mgr.manager_id === null;
+            })
+            .map(x => x.first_name + " " + x.last_name);
         console.log("here is the managers array", managersArray);
-        // const managers = data.filter(mgr => {
-        //     if (mgr.manager_id == null){
-        //         managersArray.push(mgr.first_name + " " + mgr.last_name);
-        //     };
-        //     return managersArray;
-        // })
-        // push manager names into new array to be compatible with inquirer
     });
 }
 
+function departmentQuery() {
+    const queryString = `SELECT * FROM employee_table;`;
+    connection.query(queryString, (err, data) => {
+        if (err) throw err;
+        let departmentArray = data.map(dept => dept.dept_name);
+        console.log(departmentArray);
+    });
+}
 
 //to fix
-// Fix Add employee function
-
-// working on a manager array to determine who to add as an employees manager when adding a new employee
+// Add Employee
+// Add Role
+// Update Emp role
