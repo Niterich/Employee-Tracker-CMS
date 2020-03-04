@@ -6,13 +6,7 @@ let managersArray;
 let employeeArray;
 let dArray;
 
-// managerQuery();
-// departmentQuery();
-// addRole();
-updateRole();
-// employeeQuery();
-// addEmployee();
-// start();
+start();
 
 // Initalize
 function start() {
@@ -150,7 +144,6 @@ function addEmployee() {
                     let first_name = res.fn;
                     let last_name = res.ln;
                     let ifManager = null;
-                    // console.log(roleNum);
                     if (
                         roleNum === 2 ||
                         roleNum === 4 ||
@@ -203,7 +196,6 @@ function addEmployee() {
 function addRole() {
     departmentQuery()
         .then(result => {
-            // console.log(dArray);
             inquirer
                 .prompt([
                     {
@@ -227,7 +219,6 @@ function addRole() {
                 ])
                 .then(data => {
                     let deptNum = parseInt(data.dept.charAt(0));
-                    console.log(deptNum);
                     const queryString =
                         "INSERT INTO role_table (title, salary, department_id) values (?, ?, ?);";
                     connection.query(
@@ -349,7 +340,3 @@ function departmentQuery() {
         });
     });
 }
-
-// Update Emp role
-// get employee array to work for choices in inquirer
-// make sure update query works
