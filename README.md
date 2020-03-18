@@ -4,4 +4,4 @@ A command-line content management system for keeping track of employee data
 
 Technologies used: Node, Express, MySQL
 
-<img width="660" alt="Screenshot 2020-02-22 12 03 46" src="https://user-images.githubusercontent.com/52295078/75097732-6dc96c00-556b-11ea-9785-ab4462d27845.png">
+<img width="659" alt="Screenshot 2020-03-17 17 10 45" src="https://user-images.githubusercontent.com/52295078/76912770-4a47c780-6872-11ea-93ff-72604904ec37.png">
